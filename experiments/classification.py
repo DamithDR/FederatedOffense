@@ -156,7 +156,7 @@ def run():
                 print(micro_str)
 
                 print('======================================================================')
-
+            print(f"fused model finetuned on dataset : {finetune_dataset}")
     print("Done")
 
 

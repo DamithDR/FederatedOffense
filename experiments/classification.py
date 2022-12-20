@@ -31,7 +31,7 @@ def run():
     parser = argparse.ArgumentParser(
         description='''fuse multiple models ''')
     parser.add_argument('--device_number', required=False, help='cuda device number', default=0)
-    parser.add_argument('--n_fold', required=False, help='n_fold predictions', default=3)
+    parser.add_argument('--n_fold', required=False, help='n_fold predictions', default=5)
     parser.add_argument('--datasets', required=True, help='comma separated datasets')
     parser.add_argument('--base_model_type', required=True, help='Base model type')
     parser.add_argument('--base_model', required=False, help='n_fold predictions',

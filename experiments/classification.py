@@ -76,15 +76,15 @@ def run():
         model_path = 'model_' + dataset
         model_paths.append(model_path)
 
-    # for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
-    #     train_args['best_model_dir'] = model_path
-    #     model = ClassificationModel(
-    #         base_model_type, base_model, use_cuda=torch.cuda.is_available(),
-    #         args=train_args
-    #     )
-    #     model.train_model(df_train, eval_df=df_eval)
-    #
-    # print('models training finished')
+    for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
+        train_args['best_model_dir'] = model_path
+        model = ClassificationModel(
+            base_model_type, base_model, use_cuda=torch.cuda.is_available(),
+            args=train_args
+        )
+        model.train_model(df_train, eval_df=df_eval)
+
+    print('models training finished')
 
     # ========================================================================
 

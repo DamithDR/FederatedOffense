@@ -4,7 +4,7 @@ train_args = {
     'num_train_epochs': 3,
     'evaluate_during_training_steps': 100,
     'save_eval_checkpoints': False,
-    'manual_seed': 777,
+    # 'manual_seed': 777,
     'train_batch_size': 32,
     'eval_batch_size': 8,
     'overwrite_output_dir': True,

@@ -7,6 +7,8 @@ train_args = {
     # 'manual_seed': 777,
     'train_batch_size': 16,
     'eval_batch_size': 8,
+    'use_multiprocessing': False,
+    'use_multiprocessing_for_evaluation': False,
     'overwrite_output_dir': True,
     'output_dir': 'outputs/',
     'fused_model_path': 'outputs/fused_model/',

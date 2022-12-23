@@ -78,7 +78,7 @@ def run():
         model_path = 'model_' + dataset
         model_paths.append(model_path)
 
-    if arguments.train_base_models:
+    if arguments.train_base_models == 'True':
         for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
             train_args['best_model_dir'] = model_path
             model = ClassificationModel(
@@ -89,6 +89,7 @@ def run():
 
         print('models training finished')
     else:
+        print('model training skipped')
         model_paths = str(arguments.base_model_paths).split(',')
 
     # ========================================================================

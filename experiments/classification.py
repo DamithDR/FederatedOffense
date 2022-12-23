@@ -32,6 +32,8 @@ def run():
         description='''fuse multiple models ''')
     parser.add_argument('--device_number', required=False, help='cuda device number', default=0)
     parser.add_argument('--n_fold', required=False, help='n_fold predictions', default=5)
+    parser.add_argument('--train_base_models', required=False, help='train base models', default=True)
+    parser.add_argument('--base_model_paths', required=False, help='base model paths', default='')
     parser.add_argument('--datasets', required=True, help='comma separated datasets')
     parser.add_argument('--base_model_type', required=True, help='Base model type')
     parser.add_argument('--base_model', required=False, help='n_fold predictions',
@@ -70,25 +72,28 @@ def run():
             train, df_finetune = train_test_split(train, test_size=0.2, random_state=777)
         train_sets.append(train)
         eval_sets.append(dev)
-        test = pd.read_csv(test_file,sep='\t')
+        test = pd.read_csv(test_file, sep='\t')
         test = test.rename(columns={'Text': 'text', 'Class': 'labels'})
         test_sets.append(test)
         model_path = 'model_' + dataset
         model_paths.append(model_path)
 
-    for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
-        train_args['best_model_dir'] = model_path
-        model = ClassificationModel(
-            base_model_type, base_model, use_cuda=torch.cuda.is_available(),
-            args=train_args
-        )
-        model.train_model(df_train, eval_df=df_eval)
+    if arguments.train_base_models:
+        for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
+            train_args['best_model_dir'] = model_path
+            model = ClassificationModel(
+                base_model_type, base_model, use_cuda=torch.cuda.is_available(),
+                args=train_args
+            )
+            model.train_model(df_train, eval_df=df_eval)
 
-    print('models training finished')
+        print('models training finished')
+    else:
+        model_paths = str(arguments.base_model_paths).split(',')
 
     # ========================================================================
 
-    model_paths = ['model_davidson/', 'model_olid/']
+    # model_paths = ['model_davidson/', 'model_olid/']
     # fusing multiple models
     print('model fusing started')
     model_info = ModelLoadingInfo(name=base_model, tokenizer_name=base_model,
@@ -98,7 +103,7 @@ def run():
     fused_model = fuse_models(base_model, models_to_fuse)
     # saving fused model for predictions
     fused_model.save_pretrained(train_args['fused_model_path'])
-    tokenizer = AutoTokenizer.from_pretrained(model_paths[0])#get the 1st model path to get the tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_paths[0])  # get the 1st model path to get the tokenizer
     tokenizer.save_pretrained(train_args['fused_model_path'])
     print('fused model saved')
 

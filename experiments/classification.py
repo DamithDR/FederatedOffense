@@ -130,6 +130,7 @@ def run():
 
     with open('out.txt', 'w') as f:
         with redirect_stdout(f):
+            i = 0
             for df_test, dataset in zip(test_sets, datasets):
                 test_preds = np.zeros((len(df_test), n_fold))
                 for fold in range(0, n_fold):
@@ -150,6 +151,8 @@ def run():
                 df_test['prediction'] = decode(df_test['prediction'])
                 print(f'Results for dataset : {dataset} for fold {n_fold} : ')
                 macro_f1, micro_f1 = print_information(df_test, 'prediction', 'labels')
+                df_test.to_csv('predictions_vs_test' +str(dataset) + str(i) + '.csv', index=False)
+                i += 1
                 macros.append(macro_f1)
                 micros.append(micro_f1)
 

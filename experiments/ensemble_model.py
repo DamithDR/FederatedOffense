@@ -72,24 +72,25 @@ def run():
     with open('out.txt', 'w') as f:
         with redirect_stdout(f):
             i = 0
-            for dataset in datasets:
-                df_test = test_sets[dataset]
-                for fold in range(0, n_fold):
-                    # predictions
-                    print('Starting Prediction fold no : ' + str(fold))
-                    prediction_model = ClassificationModel(
-                        base_model_type, model_paths[dataset], use_cuda=torch.cuda.is_available(),
-                        args=train_args
-                    )
-                    predictions, raw_outputs = prediction_model.predict(df_test['text'].tolist())
+            for saved_model in model_paths:
+                prediction_model = ClassificationModel(
+                    base_model_type, saved_model, use_cuda=torch.cuda.is_available(),
+                    args=train_args
+                )
+                for dataset in datasets:
+                    df_test = test_sets[dataset]
+                    for fold in range(0, n_fold):
+                        # predictions
+                        print('Starting Prediction fold no : ' + str(fold))
+                        predictions, raw_outputs = prediction_model.predict(df_test['text'].tolist())
 
-                    print("Completed Fold {}".format(fold))
-                    df_test['predictions'] = decode(predictions)
-                    filename = "ensemble_results/" + "M-" + model_paths[dataset].split('/')[1] + "D-" + dataset + ".csv"
-                    df_test.to_csv(filename, sep='\t',index=False)
+                        print("Completed Fold {}".format(fold))
+                        df_test['predictions'] = decode(predictions)
+                        filename = "ensemble_results/" + "M-" + model_paths[dataset].split('/')[1] + "D-" + dataset + ".csv"
+                        df_test.to_csv(filename, sep='\t',index=False)
 
-                print('======================================================================')
-            print(f"Predictions Generated on model {model_paths[dataset].split('/')[1]} dataset : {dataset}")
+                    print('======================================================================')
+                print(f"Predictions Generated on model {model_paths[dataset].split('/')[1]} dataset : {dataset}")
     print("Done")
 
 

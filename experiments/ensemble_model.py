@@ -66,7 +66,6 @@ def run():
         model.train_model(train, eval_df=eval_set)
 
         print(f'model creation done for : {dataset}')
-        break
     print("training finished")
     print('Starting Predictions')
 

@@ -71,8 +71,7 @@ def run():
 
     with open('out.txt', 'w') as f:
         with redirect_stdout(f):
-            i = 0
-            for saved_model in model_paths:
+            for saved_model in list(model_paths.values()):
                 prediction_model = ClassificationModel(
                     base_model_type, saved_model, use_cuda=torch.cuda.is_available(),
                     args=train_args

@@ -3,3 +3,4 @@ python -m experiments.classification --train_base_models True --datasets hatexpl
 #ensemble models
 python -m experiments.ensemble_model --base_model_type bert --base_model bert-large-cased --device_number 1
 python -m experiments.ensemble_model --base_model_type bert --base_model diptanu/fBERT --device_number 1
+python -m experiments.gen_results_temp --base_model_type bert --base_model diptanu/fBERT --device_number 1

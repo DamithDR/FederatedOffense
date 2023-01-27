@@ -86,11 +86,11 @@ def run():
 
                         print("Completed Fold {}".format(fold))
                         df_test['predictions'] = decode(predictions)
-                        filename = "ensemble_results/" + "M-" + model_paths[dataset].split('/')[1] + "D-" + dataset + ".csv"
+                        filename = "ensemble_results/" + "M-" + saved_model.split('/')[1] + "D-" + dataset + ".csv"
                         df_test.to_csv(filename, sep='\t',index=False)
 
                     print('======================================================================')
-                print(f"Predictions Generated on model {model_paths[dataset].split('/')[1]} dataset : {dataset}")
+                print(f"Predictions Generated on model {saved_model.split('/')[1]} dataset : {dataset}")
     print("Done")
 
 

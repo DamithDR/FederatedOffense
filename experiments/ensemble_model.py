@@ -51,7 +51,7 @@ def run():
         test = pd.read_csv(test_file, sep='\t')
         test = test.rename(columns={'Text': 'text', 'Class': 'labels'})
         test_sets[dataset] = test
-        model_path = 'ensemble_models/' + dataset
+        model_path = 'ensemble_models/' + dataset + '/'
         if not os.path.exists(model_path):
             os.mkdir(model_path)
         model_paths[dataset] = model_path

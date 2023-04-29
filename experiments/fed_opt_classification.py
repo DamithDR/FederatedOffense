@@ -110,64 +110,64 @@ def run():
     tokenizer.save_pretrained(train_args['fused_model_path'])
     print('fused model saved')
 
-    # load the saved model
-    train_args['best_model_dir'] = train_args['fused_finetuned_model_path']
-    general_model = ClassificationModel(
-        base_model_type, train_args['fused_model_path'], use_cuda=torch.cuda.is_available(), args=train_args
-    )
-
-    # finetune model
-    df_finetune, df_eval = train_test_split(df_finetune, test_size=0.1)
-    general_model.train_model(df_finetune, eval_df=df_eval)
-
-    fine_tuned_model = general_model  # to use directly
-
-    # fine_tuned_model = ClassificationModel(
-    #     "bert", train_args['fused_finetuned_model_path'], use_cuda=torch.cuda.is_available(), args=train_args
+    # # load the saved model
+    # train_args['best_model_dir'] = train_args['fused_finetuned_model_path']
+    # general_model = ClassificationModel(
+    #     base_model_type, train_args['fused_model_path'], use_cuda=torch.cuda.is_available(), args=train_args
     # )
-
-    print('Starting Predictions')
-    macros = []
-    micros = []
-
-    with open('out.txt', 'w') as f:
-        with redirect_stdout(f):
-            i = 0
-            for df_test, dataset in zip(test_sets, datasets):
-                test_preds = np.zeros((len(df_test), n_fold))
-                for fold in range(0, n_fold):
-                    # predictions
-                    print('Starting Prediction fold no : ' + str(fold))
-
-                    predictions, raw_outputs = fine_tuned_model.predict(df_test['text'].tolist())
-
-                    test_preds[:, fold] = predictions
-                    print("Completed Fold {}".format(fold))
-
-                final_predictions = []
-                for row in test_preds:
-                    row = row.tolist()
-                    final_predictions.append(int(max(set(row), key=row.count)))
-
-                df_test['prediction'] = final_predictions
-                df_test['prediction'] = decode(df_test['prediction'])
-                print(f'Results for dataset : {dataset} for fold {n_fold} : ')
-                macro_f1, micro_f1 = print_information(df_test, 'prediction', 'labels')
-                df_test.to_csv('predictions_vs_test' + str(dataset) + str(i) + '.csv', index=False)
-                i += 1
-                macros.append(macro_f1)
-                micros.append(micro_f1)
-
-                print(f'Final Results for dataset : {dataset}')
-                print('=====================================================================')
-
-                macro_str = "Macro F1 Mean - {} | STD - {}\n".format(np.mean(macros), np.std(macros))
-                micro_str = "Micro F1 Mean - {} | STD - {}".format(np.mean(micros), np.std(micros))
-                print(macro_str)
-                print(micro_str)
-
-                print('======================================================================')
-            print(f"fused model finetuned on dataset : {finetune_dataset}")
+    #
+    # # finetune model
+    # df_finetune, df_eval = train_test_split(df_finetune, test_size=0.1)
+    # general_model.train_model(df_finetune, eval_df=df_eval)
+    #
+    # fine_tuned_model = general_model  # to use directly
+    #
+    # # fine_tuned_model = ClassificationModel(
+    # #     "bert", train_args['fused_finetuned_model_path'], use_cuda=torch.cuda.is_available(), args=train_args
+    # # )
+    #
+    # print('Starting Predictions')
+    # macros = []
+    # micros = []
+    #
+    # with open('out.txt', 'w') as f:
+    #     with redirect_stdout(f):
+    #         i = 0
+    #         for df_test, dataset in zip(test_sets, datasets):
+    #             test_preds = np.zeros((len(df_test), n_fold))
+    #             for fold in range(0, n_fold):
+    #                 # predictions
+    #                 print('Starting Prediction fold no : ' + str(fold))
+    #
+    #                 predictions, raw_outputs = fine_tuned_model.predict(df_test['text'].tolist())
+    #
+    #                 test_preds[:, fold] = predictions
+    #                 print("Completed Fold {}".format(fold))
+    #
+    #             final_predictions = []
+    #             for row in test_preds:
+    #                 row = row.tolist()
+    #                 final_predictions.append(int(max(set(row), key=row.count)))
+    #
+    #             df_test['prediction'] = final_predictions
+    #             df_test['prediction'] = decode(df_test['prediction'])
+    #             print(f'Results for dataset : {dataset} for fold {n_fold} : ')
+    #             macro_f1, micro_f1 = print_information(df_test, 'prediction', 'labels')
+    #             df_test.to_csv('predictions_vs_test' + str(dataset) + str(i) + '.csv', index=False)
+    #             i += 1
+    #             macros.append(macro_f1)
+    #             micros.append(micro_f1)
+    #
+    #             print(f'Final Results for dataset : {dataset}')
+    #             print('=====================================================================')
+    #
+    #             macro_str = "Macro F1 Mean - {} | STD - {}\n".format(np.mean(macros), np.std(macros))
+    #             micro_str = "Micro F1 Mean - {} | STD - {}".format(np.mean(micros), np.std(micros))
+    #             print(macro_str)
+    #             print(micro_str)
+    #
+    #             print('======================================================================')
+    #         print(f"fused model finetuned on dataset : {finetune_dataset}")
     print("Done")
 
 

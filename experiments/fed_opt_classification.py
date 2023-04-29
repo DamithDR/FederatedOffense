@@ -21,6 +21,7 @@ from utils.print_stat import print_information
 # otherwise the shared memory is not enough, so it throws an error
 # torch.multiprocessing.set_sharing_strategy('file_system')
 
+# eddited the file to do fed_opt experiments
 def run():
     logging.basicConfig(filename='3m777r-results.txt',
                         filemode='a',
@@ -71,7 +72,7 @@ def run():
         # if finetune_dataset.__eq__(dataset):
         # anyway we are going to have 2 clients
         train, df_finetune = train_test_split(train, test_size=0.2, random_state=777)
-        df_finetune.to_csv(f'ft_{dataset}.csv', sep='\t')
+        df_finetune.to_csv(f'ft_{dataset}.csv', sep='\t', index=False)
         train_sets.append(train)
         eval_sets.append(dev)
         test = pd.read_csv(test_file, sep='\t')

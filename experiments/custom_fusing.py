@@ -1,9 +1,9 @@
-import parser
+import argparse
 
 from transformers import AutoTokenizer
 
 from fuse.main_model_fuse import ModelLoadingInfo, load_model, fuse_models
-
+parser = argparse.ArgumentParser("hate speech classification using federated learning")
 parser.add_argument('--fusing_models', required=True, type=str, help='folder_names of fusing models')
 parser.add_argument('--base_model', required=True, type=str, help='base_model')
 

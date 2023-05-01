@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 from contextlib import redirect_stdout
 
 import numpy as np
@@ -67,7 +68,7 @@ def run():
         test_file = 'data/' + dataset + '/' + dataset + '_test.csv'
         train = pd.read_csv(train_file, sep='\t')
         train = train.rename(columns={'Text': 'text', 'Class': 'labels'})
-        train['labels'] = encode(train['labels'])
+        # train['labels'] = encode(train['labels'])
         train, dev = train_test_split(train, test_size=0.2, random_state=777)
         # if finetune_dataset.__eq__(dataset):
         # anyway we are going to have 2 clients
@@ -80,6 +81,7 @@ def run():
         test_sets.append(test)
         model_path = 'model_' + dataset
         model_paths.append(model_path)
+    sys.exit(0)
 
     if arguments.train_base_models == 'True':
         for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):

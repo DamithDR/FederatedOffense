@@ -83,6 +83,11 @@ for i in range(2, len(base_models)):
                 for test_file in test_datasets:
                     f.write(f'test set :- {test_file}\n')
                     df_test = pd.read_csv(test_file, sep='\t')
+                    df_test = df_test.rename(columns={'Text': 'text', 'Class': 'labels'})
+                    label_lst = ['OFF', 'NOT']
+                    category2id = {cat: idx for idx, cat in enumerate(label_lst)}
+                    # id2category = {idx: cat for idx, cat in enumerate(label_lst)}
+                    df_test['labels'] = df_test['labels'].apply(lambda x: category2id[x])
                     test_preds = np.zeros((len(df_test), arguments.n_fold))
                     for fold in range(0, arguments.n_fold):
                         # predictions
@@ -94,7 +99,7 @@ for i in range(2, len(base_models)):
                         print("Completed Fold {}".format(fold))
 
                         df_test['prediction'] = predictions
-                        df_test['prediction'] = decode(df_test['prediction'])
+                        # df_test['prediction'] = decode(df_test['prediction'])
                         macro_f1, micro_f1 = print_information(df_test, 'prediction', 'labels')
                         macros.append(macro_f1)
                         micros.append(micro_f1)

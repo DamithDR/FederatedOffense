@@ -85,6 +85,7 @@ def run():
         model_paths.append(model_path)
 
     if arguments.train_base_models == 'True':
+        print('training base models')
         for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
             train_args['best_model_dir'] = model_path
             model = ClassificationModel(
@@ -102,17 +103,17 @@ def run():
 
     # model_paths = ['model_davidson/', 'model_olid/']
     # fusing multiple models
-    print('model fusing started')
-    model_info = ModelLoadingInfo(name=base_model, tokenizer_name=base_model,
-                                  classification=True)
-    models_to_fuse = [ModelLoadingInfo(name=model, tokenizer_name=model, classification=True) for model in model_paths]
-    base_model = load_model(model_info)
-    fused_model = fuse_models(base_model, models_to_fuse)
-    # saving fused model for predictions
-    fused_model.save_pretrained(train_args['fused_model_path'])
-    tokenizer = AutoTokenizer.from_pretrained(model_paths[0])  # get the 1st model path to get the tokenizer
-    tokenizer.save_pretrained(train_args['fused_model_path'])
-    print('fused model saved')
+    # print('model fusing started')
+    # model_info = ModelLoadingInfo(name=base_model, tokenizer_name=base_model,
+    #                               classification=True)
+    # models_to_fuse = [ModelLoadingInfo(name=model, tokenizer_name=model, classification=True) for model in model_paths]
+    # base_model = load_model(model_info)
+    # fused_model = fuse_models(base_model, models_to_fuse)
+    # # saving fused model for predictions
+    # fused_model.save_pretrained(train_args['fused_model_path'])
+    # tokenizer = AutoTokenizer.from_pretrained(model_paths[0])  # get the 1st model path to get the tokenizer
+    # tokenizer.save_pretrained(train_args['fused_model_path'])
+    # print('fused model saved')
 
     # # load the saved model
     # train_args['best_model_dir'] = train_args['fused_finetuned_model_path']

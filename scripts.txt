@@ -9,3 +9,5 @@ python -m experiments.gen_results_temp --base_model_type bert --base_model dipta
 python -m experiments.custom_fusing --base_model bert-large-cased --fusing_models model_davidson,model_olid
 
 python -m experiments.multi_predict --device_number 2
+
+python -m experiments.fed_opt_classification --datasets davidson,hasoc,olid,hatexplain

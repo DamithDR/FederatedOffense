@@ -33,7 +33,7 @@ def run():
         description='''fuse multiple models ''')
     parser.add_argument('--device_number', required=False, help='cuda device number', default=0)
     parser.add_argument('--n_fold', required=False, help='n_fold predictions', default=5)
-    parser.add_argument('--train_base_models', required=False, help='train base models', default=True)
+    parser.add_argument('--train_base_models', required=False, help='train base models', default=True, type=bool)
     parser.add_argument('--base_model_paths', required=False, help='base model paths', default='')
     parser.add_argument('--datasets', required=True, help='comma separated datasets')
     parser.add_argument('--base_model_type', required=False, help='Base model type', default='bert')
@@ -84,7 +84,7 @@ def run():
         model_path = 'model_' + dataset
         model_paths.append(model_path)
 
-    if arguments.train_base_models == 'True':
+    if arguments.train_base_models:
         print('training base models')
         for model_path, df_train, df_eval in zip(model_paths, train_sets, eval_sets):
             train_args['best_model_dir'] = model_path

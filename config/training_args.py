@@ -6,7 +6,7 @@ train_args = {
     'save_eval_checkpoints': False,
     # 'manual_seed': 777,
     'train_batch_size': 16,
-    'eval_batch_size': 8,
+    'eval_batch_size': 16,
     'use_multiprocessing': False,
     'use_multiprocessing_for_evaluation': False,
     'overwrite_output_dir': True,

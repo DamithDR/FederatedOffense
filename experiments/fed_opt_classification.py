@@ -36,18 +36,15 @@ def run():
     parser.add_argument('--train_base_models', required=False, help='train base models', default=True)
     parser.add_argument('--base_model_paths', required=False, help='base model paths', default='')
     parser.add_argument('--datasets', required=True, help='comma separated datasets')
-    parser.add_argument('--base_model_type', required=True, help='Base model type')
+    parser.add_argument('--base_model_type', required=False, help='Base model type', default='bert')
     parser.add_argument('--base_model', required=False, help='n_fold predictions',
                         default='bert-large-cased')
-    parser.add_argument('--fuse_finetune_dataset', required=True,
-                        help='the dataset which should be used to finetune the fused model')
 
     arguments = parser.parse_args()
     datasets = arguments.datasets.split(',')
     n_fold = int(arguments.n_fold)
     base_model = arguments.base_model
     base_model_type = arguments.base_model_type
-    finetune_dataset = str(arguments.fuse_finetune_dataset)
 
     print('data loading started')
     if torch.cuda.is_available():
@@ -61,14 +58,20 @@ def run():
     test_sets = []
     eval_sets = []
     df_finetune = DataFrame()
+
     for dataset in datasets:
         dataset = str(dataset).lower()
         train_file = 'data/' + dataset + '/' + dataset + '_train.csv'
         test_file = 'data/' + dataset + '/' + dataset + '_test.csv'
         train = pd.read_csv(train_file, sep='\t')
         train = train.rename(columns={'Text': 'text', 'Class': 'labels'})
-        train['labels'] = encode(train['labels'])
+        # train['labels'] = encode(train['labels'])
+        label_lst = ['OFF', 'NOT']
+        category2id = {cat: idx for idx, cat in enumerate(label_lst)}
+        id2category = {idx: cat for idx, cat in enumerate(label_lst)}
+        train['labels'] = train['labels'].apply(lambda x: category2id[x])
         train, dev = train_test_split(train, test_size=0.2, random_state=777)
+
         # if finetune_dataset.__eq__(dataset):
         # anyway we are going to have 2 clients
         train, df_finetune = train_test_split(train, test_size=0.2, random_state=777)

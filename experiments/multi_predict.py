@@ -77,7 +77,7 @@ for i in range(2, len(base_models)):
 
             save_file_name = results_path + '_'.join(combination) + '.txt'
 
-            with open(save_file_name, 'w') as f:
+            with open(save_file_name, 'a') as f:
                 f.write(f'finetuned on {f_tune_file}\n')
                 f.write('==============================================\n')
                 macros = []

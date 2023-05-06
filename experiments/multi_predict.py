@@ -52,6 +52,8 @@ for i in range(2, len(base_models)):
         base_model = load_model(model_info)
         fused_model = fuse_models(base_model, models_to_fuse)
         # saving fused model for predictions
+        if not os.path.exists(temporary_path):
+            os.mkdir(temporary_path)
         fused_model.save_pretrained(temporary_path)
         tokenizer = AutoTokenizer.from_pretrained(model_paths[0])  # get the 1st model path to get the tokenizer
         tokenizer.save_pretrained(temporary_path)
@@ -115,4 +117,4 @@ for i in range(2, len(base_models)):
             del general_model
             print("Done")
 
-        shutil.rmtree(temporary_path + '*.*')
+        shutil.rmtree(temporary_path)
